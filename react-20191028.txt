@@ -1,0 +1,230 @@
+********** 개발 환경 구성 **********
+
+1. Node.js
+
+. nvm-windows 사용하여 버전별로 설치 및 전환 가능 (https://github.com/coreybutler/nvm-windows)
+
+$ nvm
+
+Running version 1.1.7.
+
+Usage:
+
+  nvm arch                     : Show if node is running in 32 or 64 bit mode.
+  nvm install <version> [arch] : The version can be a node.js version or "latest" for the latest stable version.
+                                 Optionally specify whether to install the 32 or 64 bit version (defaults to system arch).
+                                 Set [arch] to "all" to install 32 AND 64 bit versions.
+                                 Add --insecure to the end of this command to bypass SSL validation of the remote download server.
+  nvm list [available]         : List the node.js installations. Type "available" at the end to see what can be installed. Aliased as ls.
+  nvm on                       : Enable node.js version management.
+  nvm off                      : Disable node.js version management.
+  nvm proxy [url]              : Set a proxy to use for downloads. Leave [url] blank to see the current proxy.
+                                 Set [url] to "none" to remove the proxy.
+  nvm node_mirror [url]        : Set the node mirror. Defaults to https://nodejs.org/dist/. Leave [url] blank to use default url.
+  nvm npm_mirror [url]         : Set the npm mirror. Defaults to https://github.com/npm/cli/archive/. Leave [url] blank to default url.
+  nvm uninstall <version>      : The version must be a specific version.
+  nvm use [version] [arch]     : Switch to use the specified version. Optionally specify 32/64bit architecture.
+                                 nvm use <arch> will continue using the selected version, but switch to 32/64 bit mode.
+  nvm root [path]              : Set the directory where nvm should store different versions of node.js.
+                                 If <path> is not set, the current root will be displayed.
+  nvm version                  : Displays the current running version of nvm for Windows. Aliased as v.
+
+$ nvm install 10.16.3
+$ nvm list
+$ nvm use 10.16.3
+
+2. Visual Studio Code
+
+https://code.visualstudio.com/
+
+3. React Developer Tools
+
+Chrome Web Store 에서 'React Developer Tools' 검색하여 설치
+
+
+********** ES2015 **********
+
+1. ES2015 개요
+
+. ES2015 개요
+.. A.K.A. ES6
+.. 새로운 문법이 추가되었음
+.. ES2015는 ES5에 대해 하위 호환성을 가짐
+.. 현재 ES2015를 완벽하게 지원하는 환경은 없음
+.. - 크롬: 97%, Edge: 92%, IE11: 11%, FF: 92%
+.. - Node.js 6: 92%
+.. - http://kangax.github.io/compat-table/es6/
+.. 대표적인 트랜스 파일러
+.. - Babel: 71%
+.. - TypeScript: 59%
+.. - React는 주로 Babel을 사용함.
+
+2. Babel
+
+. Babel 개요
+.. ES2015 코드를 ES5 코드로 트랜스파일함.
+.. 온라인 도구 (http://babeljs.io/repl)
+
+. ES2015 테스트를 위한 프로젝트 생성
+.. 프로젝트를 위한 디렉토리 생성
+.. $ mkdir testapp
+
+. Visual Studio Code 실행
+.. 실행 후 생성한 폴더 열기
+.. - 파일 메뉴 - 폴더 열기
+.. - 보기 - 터미널 실행
+
+. 프로젝트 초기화
+.. $ npm init
+.. - 기본값으로 입력하거나 적절한 값을 입력함.
+
+. Babel 설치
+.. node.js 설치 후 babel을 설치함.
+.. $ npm install --save-dev babel-cli babel-preset-env babel-preset-stage-2
+
+. .babelrc 설정 파일 작성
+.. {
+..    "presets": [ "env", "stage-2" ]
+.. }
+
+. 테스트 코드 작성 (src/sample.js)
+.. let name = "world";
+.. console.log(`hello ${name}!!`);
+
+. 테스트 코드 실행 (build/sample.js 파일은 ES5 형식으로 트랜스파일 된다.)
+.. $ npx babel src -d build
+.. $ node build/sample.js
+
+. 원본 코드로 디버깅하기 위해 source map 사용하기 (build/sample.js.map 파일이 생성된다.)
+.. $ npm install --save-dev babel-plugin-source-map-support
+.. $ npx babel src -d build --source-maps
+.. $ ls -l build
+.. Chrome 개발자 도구의 콘솔에서 디버깅시 원본 코드로 디버깅을 수행할 수 있다.
+
+
+********** Webpack **********
+
+. webpack?
+.. JavaScript module bundler
+.. - 모듈들이 포함하는 정적 자원 (CSS, 이미지 등) 들을 번들링하여 모듈을 생성함
+.. 장점
+.. - 초기 로딩 시간을 줄인다.
+.. - 모듈로 3rd party 라이브러리를 통합할 수 있다.
+.. - 대규모 프로젝트에 적합하다.
+.. - npm 패키지를 사용할 수 있다.
+.. - babel 과의 통합성이 좋다.
+.. - Hot Module Replacement 지원 (webpack-dev-server 패키지 사용하면 코드가 수정될 때마다 자동 갱신)
+
+. 실습 프로젝트 구성
+.. $ mkdir webpacktest
+.. $ cd webpacktest
+.. $ npm init
+.. $ npm install --save-dev webpack webpack-cli webpack-dev-server
+
+.. src/app.js , src/employee.js , public/index.html 구성
+
+.. webpack.config.js 구성
+
+module.exports = {
+    devtool: 'source-map',
+    mode: 'development',
+    entry: __dirname + '/src/app.js',
+    output: {
+        path: __dirname + '/public',
+        filename: 'bundle.js'
+    }
+};
+
+.. package.json 구성
+
+{
+  "name": "webpacktest",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "webpack": "^4.41.2",
+    "webpack-cli": "^3.3.9",
+    "webpack-dev-server": "^3.9.0"
+  }
+}
+
+$ npm run build
+
+
+. webpack-dev-server 추가
+
+.. webpack.config.js 추가 설정 (devServer 추가)
+
+module.exports = {
+    devtool: 'source-map',
+    mode: 'development',
+    entry: __dirname + '/src/app.js',
+    output: {
+        path: __dirname + '/public',
+        filename: 'bundle.js'
+    },
+    devServer: {
+        contentBase: './public',
+        inline: true,
+        historyApiFallback: true,
+        port: 8080
+    }
+};
+
+.. package.json 추가 설정 (start 추가)
+
+{
+  "name": "webpacktest",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack",
+    "start": "webpack-dev-server --hot --open"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "webpack": "^4.41.2",
+    "webpack-cli": "^3.3.9",
+    "webpack-dev-server": "^3.9.0"
+  }
+}
+
+$ npm run start
+
+
+. cross-env 추가
+
+$ npm install --save-dev cross-env
+
+.. package.json 추가 설정 (NODE_ENV 추가)
+
+{
+  "name": "webpacktest",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "cross-env NODE_ENV=production webpack",
+    "start": "cross-env NODE_ENV=development webpack-dev-server --hot --open"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "cross-env": "^6.0.3",
+    "webpack": "^4.41.2",
+    "webpack-cli": "^3.3.9",
+    "webpack-dev-server": "^3.9.0"
+  }
+}
+

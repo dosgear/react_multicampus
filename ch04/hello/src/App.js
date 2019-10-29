@@ -17,7 +17,7 @@ class App extends Component {
 
   createString(x, y) {
     return (
-      <div className="well">
+      <div class="well">
         {x} + {y} = {x + y}
       </div>
     );
@@ -25,9 +25,9 @@ class App extends Component {
 
   render() {
     return (
-      <div className="container">
+      <div class="container">
         <h1>Hello {this.state.msg}!!</h1>
-        <hr className="dash-style" />
+        <hr class="dash-style" />
         {this.createString(4, 5)}
         <CountryList countries={this.state.list} />
       </div>

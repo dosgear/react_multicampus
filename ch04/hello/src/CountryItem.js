@@ -8,8 +8,4 @@ class CountryItem extends Component {
   }
 }
 
-CountryItem.propTypes = {};
-
-CountryItem.defaultProps = {};
-
 export default CountryItem;
